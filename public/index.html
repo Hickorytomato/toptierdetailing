@@ -11,7 +11,7 @@
   <meta property="og:url" content="https://toptierdetailingok.com/">
   <meta property="og:title" content="Top Tier Detailing | Mobile Car Detailing in Tulsa">
   <meta property="og:description" content="Full details from $150, paint correction and ceramic coating, done in your driveway. Weeknights and weekends across the Tulsa metro.">
-  <meta property="og:image" content="https://toptierdetailingok.com/logo-og.png">
+  <meta property="og:image" content="https://toptierdetailingok.com/og.png">
   <meta name="twitter:card" content="summary">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -26,7 +26,8 @@
     "@type": "AutoWash",
     "name": "Top Tier Detailing",
     "url": "https://toptierdetailingok.com/",
-    "image": "https://toptierdetailingok.com/logo-og.png",
+    "image": "https://toptierdetailingok.com/og.png",
+    "logo": "https://toptierdetailingok.com/icon-512.png",
     "founder": "Carlos Landeros",
     "priceRange": "$150–$499+",
     "areaServed": ["Tulsa", "Broken Arrow", "Jenks", "Bixby", "Owasso", "Sand Springs"],
@@ -43,9 +44,10 @@
 
   <header class="site-header">
     <div class="wrap">
-      <a class="brand" href="/"><img src="/logo.png" alt="" width="40" height="40">Top Tier Detailing</a>
+      <a class="brand" href="/"><img src="/icon-192.png" alt="" width="44" height="44">Top Tier Detailing</a>
       <nav class="nav" aria-label="Main">
         <a href="#services">Services</a>
+        <a href="#work">Our work</a>
         <a href="#pricing">Pricing</a>
         <a href="#how">How it works</a>
         <a href="#hours">Hours &amp; area</a>
@@ -56,11 +58,16 @@
 
   <main id="main">
     <section class="hero" aria-label="Intro">
-      <img class="hero-img" src="/images/hero-gtr.jpg" alt="" fetchpriority="high">
+      <div class="hero-media">
+        <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="/images/hero/poster.jpg" aria-label="Recent work: an Audi R8, a Mercedes GLE, a Silverado SS, and a GMC Denali">
+          <source src="/images/hero/reel-540.mp4" type="video/mp4" media="(max-width: 600px)">
+          <source src="/images/hero/reel-720.mp4" type="video/mp4">
+        </video>
+      </div>
       <div class="wrap">
         <p class="eyebrow">Mobile detailing · Tulsa metro</p>
         <h1>Detailed in your <em>driveway.</em></h1>
-        <p class="lede">I come to you on weeknights and weekends and do the whole car, inside and out, the right way. You don't have to drop it off or sit in a waiting room.</p>
+        <p class="lede"><span class="long">From daily drivers to Lambos and lifted trucks, I come to you on weeknights and weekends and detail the whole car, inside and out. You don't have to drop it off or sit in a waiting room.</span><span class="short">Daily drivers to Lambos and lifted trucks. I come to you, weeknights and weekends.</span></p>
         <div class="hero-cta">
           <a class="btn btn-brass" href="/book">Book a detail</a>
           <a class="btn btn-ghost" href="#pricing">See prices</a>
@@ -82,7 +89,7 @@
         </div>
         <div class="services" data-reveal-group>
           <article class="service">
-            <img src="/images/interior-leather.jpg" alt="Clean leather seats after an interior detail" loading="lazy" width="1400" height="933">
+            <img src="/images/work/urus-interior-800.jpg" srcset="/images/work/urus-interior-800.jpg 800w, /images/work/urus-interior-1600.jpg 1600w" sizes="(min-width: 720px) 50vw, 100vw" alt="Lamborghini Urus interior after a full detail" loading="lazy" width="800" height="500" style="object-position:50% 62%">
             <div class="service-body">
               <h3>Full detail</h3>
               <p>Hand wash and dry, wheels and tires, glass and trim. Inside, I vacuum everything, wipe down every surface, clean and condition the leather, and do the windows.</p>
@@ -90,7 +97,7 @@
             </div>
           </article>
           <article class="service">
-            <img src="/images/polishing.jpg" alt="Machine polisher working on a car's paint" loading="lazy" width="1400" height="933">
+            <img src="/images/work/urus-front-800.jpg" srcset="/images/work/urus-front-800.jpg 800w, /images/work/urus-front-1600.jpg 1600w" sizes="(min-width: 720px) 50vw, 100vw" alt="Green Lamborghini Urus with glossy paint at sunset" loading="lazy" width="800" height="500" style="object-position:50% 64%">
             <div class="service-body">
               <h3>Paint correction</h3>
               <p>Machine polishing that takes out swirl marks, haze, and light scratches, so the paint looks deep and glossy again instead of dull.</p>
@@ -98,7 +105,7 @@
             </div>
           </article>
           <article class="service">
-            <img src="/images/paint-beads.jpg" alt="Water beading on ceramic-coated paint" loading="lazy" width="1400" height="1120">
+            <img src="/images/work/denali-hd-800.jpg" srcset="/images/work/denali-hd-800.jpg 800w, /images/work/denali-hd-1600.jpg 1600w" sizes="(min-width: 720px) 50vw, 100vw" alt="Black GMC Denali HD with mirror-gloss paint under gas station lights" loading="lazy" width="800" height="500" style="object-position:50% 62%">
             <div class="service-body">
               <h3>Ceramic coating</h3>
               <p>A hard, glossy layer that bonds to the paint. Water beads off, dirt doesn't stick, and it lasts far longer than wax. Best done right after correction.</p>
@@ -106,13 +113,29 @@
             </div>
           </article>
           <article class="service">
-            <img src="/images/wheel-detail.jpg" alt="Polished wheel and dressed tire" loading="lazy" width="1200" height="760">
+            <img src="/images/work/silverado-hd-800.jpg" srcset="/images/work/silverado-hd-800.jpg 800w, /images/work/silverado-hd-1600.jpg 1600w" sizes="(min-width: 720px) 50vw, 100vw" alt="White Chevy Silverado HD with polished wheels at night" loading="lazy" width="800" height="500" style="object-position:50% 62%">
             <div class="service-body">
               <h3>Wheel polish</h3>
               <p>I take the brake dust and road film off the faces and barrels, then polish the wheels so the metal shines again.</p>
               <p class="service-price">Quoted by wheel</p>
             </div>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="work" class="alt">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Recent work</p>
+          <h2>Real cars. <em>Real results.</em></h2>
+          <p class="lede">Every photo on this site is my own work. No stock photos. Tap any one to see it bigger.</p>
+        </div>
+        <div class="gallery" data-reveal-group>
+          <a class="shot tall" href="/images/work/g-wagon-1600.jpg"><img src="/images/work/g-wagon-800.jpg" alt="White Mercedes G-Wagon at sunset" loading="lazy" width="800" height="1067" style="object-position:38% 82%"><span>Mercedes G-Wagon</span></a>
+          <a class="shot" href="/images/work/r8-interior-1600.jpg"><img src="/images/work/r8-interior-800.jpg" alt="Audi R8 interior with protective covers after detailing" loading="lazy" width="800" height="1067" style="object-position:50% 40%"><span>Audi R8</span></a>
+          <a class="shot" href="/images/work/g-wagon-interior-1600.jpg"><img src="/images/work/g-wagon-interior-800.jpg" alt="Mercedes G-Wagon interior after detailing" loading="lazy" width="800" height="1067" style="object-position:50% 45%"><span>G-Wagon interior</span></a>
+          <a class="shot wide" href="/images/work/urus-rear-1600.jpg"><img src="/images/work/urus-rear-800.jpg" alt="Green Lamborghini Urus, rear view" loading="lazy" width="800" height="777"><span>Lamborghini Urus</span></a>
         </div>
       </div>
     </section>
@@ -245,9 +268,14 @@
     </section>
   </main>
 
+  <dialog class="lightbox" id="lightbox" aria-label="Photo">
+    <button class="lb-close" type="button" aria-label="Close">✕</button>
+    <img alt="">
+  </dialog>
+
   <footer class="site-footer">
     <div class="wrap">
-      <a class="brand" href="/"><img src="/logo.png" alt="" width="32" height="32">Top Tier Detailing</a>
+      <a class="brand" href="/"><img src="/icon-192.png" alt="" width="36" height="36">Top Tier Detailing</a>
       <p>Carlos Landeros · Mobile detailing · Tulsa, OK</p>
       <p>© <span id="year">2026</span> Top Tier Detailing</p>
     </div>

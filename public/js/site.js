@@ -22,6 +22,34 @@
   }, { passive: true });
   onScroll();
 
+  // Hero reel: respect reduced motion, and pause it when it's off screen to save battery.
+  var vid = document.querySelector(".hero-video");
+  if (vid) {
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (still) { vid.removeAttribute("autoplay"); vid.pause(); }
+    else if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) { var p = vid.play(); if (p && p.catch) p.catch(function () {}); } else vid.pause(); });
+      }).observe(vid);
+    }
+  }
+
+  // Tap a gallery photo to see it bigger.
+  var lb = document.getElementById("lightbox");
+  if (lb && typeof lb.showModal === "function") {
+    var lbImg = lb.querySelector("img");
+    document.querySelectorAll(".gallery .shot").forEach(function (a) {
+      a.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        var img = a.querySelector("img");
+        lbImg.src = a.getAttribute("href");
+        lbImg.alt = img ? img.alt : "";
+        lb.showModal();
+      });
+    });
+    lb.addEventListener("click", function () { lb.close(); });
+  }
+
   // Fade sections in as they come into view.
   var targets = [].slice.call(document.querySelectorAll("[data-reveal]"));
   document.querySelectorAll("[data-reveal-group]").forEach(function (g) {

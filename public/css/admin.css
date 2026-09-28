@@ -1,7 +1,7 @@
 /* Carlos's request screen */
 body.admin { background: var(--bg); padding-bottom: env(safe-area-inset-bottom); }
 .login { max-width: 22rem; margin: 0 auto; padding: 18vh var(--gut) 40px; text-align: center; }
-.login img { margin: 0 auto 18px; border-radius: 50%; }
+.login img { margin: 0 auto 18px; width: 200px; height: auto; }
 .login h1 { font-size: 2.6rem; }
 .login .lede { margin: 8px auto 24px; }
 .login form { display: grid; gap: 12px; }
@@ -9,6 +9,7 @@ body.admin { background: var(--bg); padding-bottom: env(safe-area-inset-bottom);
 .a-header { position: sticky; top: 0; z-index: 30; background: rgba(7,7,7,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top); }
 .a-top { display: flex; justify-content: space-between; align-items: center; height: 56px; padding: 0 var(--gut); max-width: 44rem; margin: 0 auto; }
 .a-top .brand { font-size: 1.5rem; }
+.a-top .brand img { border-radius: 50%; }
 .linkish { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: 1.2rem; padding: 8px; }
 .tabs { display: flex; gap: 4px; padding: 0 var(--gut); max-width: 44rem; margin: 0 auto; overflow-x: auto; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }

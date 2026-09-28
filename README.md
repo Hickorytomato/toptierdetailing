@@ -36,7 +36,7 @@ npx wrangler dev
 ```
 
 ## To do
-- Swap stock photos in `public/images/` for Carlos's work.
+- Photos: `public/images/work/` (Carlos's, retouched, location data stripped). Hero reel: `public/images/hero/`. Logo: `public/logo.svg` (white), `logo-gold.svg`.
 - Fill in the coating deposit amount in `public/js/admin.js` (search for `$__`).
 - New-request phone notifications: ntfy.sh blocks Cloudflare's shared IPs on the free tier,
   so this needs another channel (email, Telegram, or an ntfy account token).
