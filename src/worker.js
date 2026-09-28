@@ -10,9 +10,17 @@ const MAX_PHOTOS = 4;
 const MAX_PHOTO_BYTES = 900_000; // after client-side compression
 const SESSION_DAYS = 90;
 
+// Old links from the first version of the site.
+const REDIRECTS = {
+  "/status": "/book", "/status.html": "/book",
+  "/index.html": "/", "/book.html": "/book", "/admin.html": "/admin",
+};
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    const moved = REDIRECTS[url.pathname];
+    if (moved) return Response.redirect(url.origin + moved, 301);
     if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
     try {
       return await route(request, env, ctx, url);
@@ -147,7 +155,7 @@ async function createRequest(req, env, ctx) {
 }
 
 async function notifyCarlos(env, r) {
-  if (!env.NTFY_TOPIC) return;
+  if (!env.NTFY_TOPIC) { console.log("ntfy: no topic set"); return; }
   const city = r.address.split(",").slice(1).join(",").trim() || r.address;
   const lines = [
     `${prettyDate(r.date)} · ${windowLabel(r.win)}`,
@@ -155,7 +163,7 @@ async function notifyCarlos(env, r) {
     `${r.name.split(" ")[0]} · ${city}`,
   ];
   try {
-    await fetch(`https://ntfy.sh/${encodeURIComponent(env.NTFY_TOPIC)}`, {
+    const res = await fetch(`https://ntfy.sh/${encodeURIComponent(env.NTFY_TOPIC)}`, {
       method: "POST",
       headers: {
         Title: `New request: ${serviceLabel(r.service)}`,
@@ -165,6 +173,7 @@ async function notifyCarlos(env, r) {
       },
       body: lines.join("\n"),
     });
+    if (!res.ok) console.error("ntfy failed", res.status, await res.text());
   } catch (e) {
     console.error("ntfy failed", e);
   }

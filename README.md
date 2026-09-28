@@ -14,11 +14,18 @@ and the booking API in `src/worker.js`. Bookings live in the D1 database `top-ti
 | Database tables | `migrations/` |
 | Photos | `public/images/` (stock for now; swap in Carlos's work) |
 
-## Settings (Cloudflare dashboard → Workers → toptierdetailing → Settings → Variables and secrets)
-- `ADMIN_PASSWORD` (secret): Carlos's password for `/admin`.
-- `NTFY_TOPIC` (secret, optional): a private topic name. When it's set, Carlos's phone gets
-  a notification for every new request through the free ntfy app (ntfy.sh). Subscribe to the
-  same topic name in the app.
+## Hosting
+Lives in the Cloudflare **Pages** project `top-tier-detailing` (custom domains toptierdetailingok.com
+and www). `src/worker.js` is bundled to `_worker.js` so Pages runs the API. Production bindings:
+`DB` → D1 `top-tier-bookings`, secrets `ADMIN_PASSWORD` (Carlos's /admin password) and `NTFY_TOPIC`.
+
+Rollback: Cloudflare dashboard → Workers & Pages → top-tier-detailing → Deployments → pick an older one → Rollback.
+
+## Deploy
+```
+export CLOUDFLARE_API_TOKEN=...   # "Edit Cloudflare Workers" token
+npm run deploy
+```
 
 ## Local dev
 ```
@@ -28,7 +35,8 @@ npx wrangler d1 migrations apply top-tier-bookings --local
 npx wrangler dev
 ```
 
-## Deploy
-Pushing to `main` deploys automatically once the repo is connected in Cloudflare
-(Workers & Pages → Create → Import a repository). Build command: none. Deploy command: `npx wrangler deploy`.
-Apply new database migrations with `npm run db:setup`.
+## To do
+- Swap stock photos in `public/images/` for Carlos's work.
+- Fill in the coating deposit amount in `public/js/admin.js` (search for `$__`).
+- New-request phone notifications: ntfy.sh blocks Cloudflare's shared IPs on the free tier,
+  so this needs another channel (email, Telegram, or an ntfy account token).
