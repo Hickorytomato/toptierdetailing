@@ -14,12 +14,36 @@ export const SERVICES = [
   { id: "wheels",       group: "wheels",     name: "Wheel polish",     quote: true, length: "short" },
 ];
 
+// Things people can stack on top of the main service.
+// kind "service" = quoted separately; kind "extra" = small add-on priced on site.
 export const ADDONS = [
-  { id: "pet-hair",   name: "Pet hair removal" },
-  { id: "odor",       name: "Odor removal" },
-  { id: "engine-bay", name: "Engine bay" },
-  { id: "headlights", name: "Headlight restoration" },
+  { id: "wheels",     name: "Wheel polish",          kind: "service", length: "short" },
+  { id: "correction", name: "Paint correction",      kind: "service", length: "long" },
+  { id: "ceramic",    name: "Ceramic coating",       kind: "service", length: "long" },
+  { id: "pet-hair",   name: "Pet hair removal",      kind: "extra",   length: "short" },
+  { id: "odor",       name: "Odor removal",          kind: "extra",   length: "short" },
+  { id: "engine-bay", name: "Engine bay",            kind: "extra",   length: "short" },
+  { id: "headlights", name: "Headlight restoration", kind: "extra",   length: "short" },
 ];
+
+// Add-ons that don't make sense with a given main service (already included or the same thing).
+export function addonAllowed(service, addonId) {
+  if (!service) return true;
+  if (service.group === addonId) return false;
+  if (service.group === "signature" && (addonId === "correction" || addonId === "ceramic")) return false;
+  return true;
+}
+
+// A job is all-day if the main service or anything stacked on it is.
+export function jobLength(service, addonIds = []) {
+  if (!service) return "short";
+  if (service.length === "long") return "long";
+  return addonIds.some((id) => ADDONS.find((a) => a.id === id)?.length === "long") ? "long" : "short";
+}
+
+export function addonNames(ids) {
+  return ids.map((id) => ADDONS.find((a) => a.id === id)?.name || id);
+}
 
 // Time windows. weekday = Mon–Fri, weekend = Sat–Sun.
 export const WINDOWS = {
@@ -55,11 +79,12 @@ export function dayType(ymd) {
 }
 
 // Which windows a service can be booked into on a given date.
-export function windowsFor(service, ymd) {
+export function windowsFor(service, ymd, addonIds = []) {
   if (!service) return [];
   const type = dayType(ymd);
+  const len = jobLength(service, addonIds);
   return Object.entries(WINDOWS)
-    .filter(([, w]) => w.length === service.length && w.days.includes(type))
+    .filter(([, w]) => w.length === len && w.days.includes(type))
     .map(([id]) => id);
 }
 

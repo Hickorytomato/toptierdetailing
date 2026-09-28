@@ -307,3 +307,6 @@ h1 em, h2 em { font-style: italic; color: var(--brass); font-weight: 600; }
   .hero { align-items: center; }
   .hero .wrap { padding-top: 48px; padding-bottom: 48px; }
 }
+
+.sub-label { font-size: .85rem; font-weight: 600; color: var(--fg); margin: 16px 0 8px; }
+.sub-label span { color: var(--dim); font-weight: 400; }

@@ -29,12 +29,17 @@
     <section class="step" id="step-service" aria-labelledby="h-service">
       <p class="step-label">Step 1 of 3</p>
       <h1 id="h-service">What does your car need?</h1>
-      <p class="lede">Pick one. You can mention anything else in the notes.</p>
+      <p class="lede">Pick the main job. You can add more below.</p>
       <div class="opt-list" id="service-list" role="radiogroup" aria-label="Service"></div>
 
-      <p class="group-label">Anything extra?</p>
-      <p class="group-hint">Optional. Priced on site.</p>
-      <div class="chips" id="addon-list"></div>
+      <p class="group-label">Want more done while I'm there?</p>
+      <p class="group-hint">Optional. Tap as many as you like.</p>
+      <p class="sub-label">Add a service <span>· quoted when I see the car</span></p>
+      <div class="chips" id="addon-services"></div>
+      <p class="sub-label">Extras <span>· priced on site</span></p>
+      <div class="chips" id="addon-extras"></div>
+      <p class="note" id="addon-note" hidden>Adding correction or ceramic makes it an all-day job, so you'll pick a weekend day next.</p>
+      <p class="note" id="addon-flash" role="status" hidden></p>
     </section>
 
     <!-- Step 2: when -->
@@ -55,7 +60,7 @@
         <p class="group-label" id="windows-label">Time</p>
         <div class="windows" id="windows" role="radiogroup" aria-labelledby="windows-label"></div>
       </div>
-      <p class="note" id="long-note" hidden>Correction and ceramic take all day, so I do them on weekends starting at 8 am.</p>
+      <p class="note" id="long-note" hidden>Correction and ceramic take all day, so I do those jobs on weekends starting at 8 am.</p>
     </section>
 
     <!-- Step 3: details -->

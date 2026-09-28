@@ -1,6 +1,7 @@
 import {
   SERVICES, ADDONS, WINDOWS, BOOK_AHEAD_DAYS,
   serviceById, serviceLabel, priceLabel, windowsFor, windowOpen,
+  addonAllowed, jobLength, addonNames,
   addDays, todayChicago, prettyDate,
 } from "./services.js";
 
@@ -75,30 +76,67 @@ function pickGroup(group) {
   afterServiceChange();
 }
 
+const addonList = () => [...state.addons];
+
 function afterServiceChange() {
-  // A time picked for a different job length may no longer be valid.
   const s = serviceById(state.service);
-  if (s && state.date && !windowsFor(s, state.date).includes(state.window)) state.window = null;
+  // Drop add-ons that the new main service already covers.
+  for (const id of [...state.addons]) if (!addonAllowed(s, id)) state.addons.delete(id);
+  // A time picked for a different job length may no longer be valid.
+  if (s && state.date && !windowsFor(s, state.date, addonList()).includes(state.window)) state.window = null;
   if (s && state.date && !dayHasOpening(state.date)) { state.date = null; state.window = null; }
   renderServices();
+  renderAddons();
   updateBar();
 }
 
 function renderAddons() {
-  const wrap = $("#addon-list");
-  wrap.innerHTML = "";
-  for (const a of ADDONS) {
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "chip";
-    b.textContent = a.name;
-    b.setAttribute("aria-pressed", String(state.addons.has(a.id)));
-    b.addEventListener("click", () => {
-      state.addons.has(a.id) ? state.addons.delete(a.id) : state.addons.add(a.id);
+  const s = serviceById(state.service);
+  const fill = (el, kind) => {
+    el.innerHTML = "";
+    for (const a of ADDONS.filter((x) => x.kind === kind && addonAllowed(s, x.id))) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip";
+      b.textContent = a.name;
       b.setAttribute("aria-pressed", String(state.addons.has(a.id)));
-    });
-    wrap.appendChild(b);
+      b.addEventListener("click", () => toggleAddon(a.id));
+      el.appendChild(b);
+    }
+  };
+  fill($("#addon-services"), "service");
+  fill($("#addon-extras"), "extra");
+  const note = $("#addon-note");
+  const long = s && s.length !== "long" && jobLength(s, addonList()) === "long";
+  note.hidden = !long;
+}
+
+function toggleAddon(id) {
+  const s = serviceById(state.service);
+  state.addons.has(id) ? state.addons.delete(id) : state.addons.add(id);
+  // Correction + ceramic together is the Signature package.
+  if (state.addons.has("correction") && state.addons.has("ceramic") && (!s || s.group !== "full")) {
+    state.addons.delete("correction"); state.addons.delete("ceramic");
+    pickGroup("signature");
+    flash("Correction + ceramic together is the Signature package, so I switched you to that.");
+    return;
   }
+  if ((s?.group === "correction" && id === "ceramic" && state.addons.has("ceramic")) ||
+      (s?.group === "ceramic" && id === "correction" && state.addons.has("correction"))) {
+    state.addons.delete(id);
+    pickGroup("signature");
+    flash("Correction + ceramic together is the Signature package, so I switched you to that.");
+    return;
+  }
+  afterServiceChange();
+}
+
+function flash(msg) {
+  const el = $("#addon-flash");
+  el.textContent = msg;
+  el.hidden = false;
+  clearTimeout(flash.t);
+  flash.t = setTimeout(() => (el.hidden = true), 6000);
 }
 
 // ───────── Step 2: when ─────────
@@ -118,7 +156,7 @@ function dayHasOpening(ymd) {
   const a = state.avail;
   if (!s || !a) return false;
   if (ymd < a.first || ymd > a.last || a.blocked.includes(ymd)) return false;
-  return windowsFor(s, ymd).some((w) => windowOpen(w, a.taken[ymd]));
+  return windowsFor(s, ymd, addonList()).some((w) => windowOpen(w, a.taken[ymd]));
 }
 
 function weekStart(ymd) {
@@ -154,7 +192,7 @@ function renderDays() {
     b.innerHTML = `<span class="m">${prettyDate(ymd, { month: "short" })}</span><span class="n">${Number(ymd.slice(8))}</span>`;
     b.addEventListener("click", () => {
       state.date = ymd;
-      const wins = windowsFor(s, ymd).filter((w) => windowOpen(w, a.taken[ymd]));
+      const wins = windowsFor(s, ymd, addonList()).filter((w) => windowOpen(w, a.taken[ymd]));
       state.window = wins.length === 1 ? wins[0] : (wins.includes(state.window) ? state.window : null);
       renderDays();
       renderWindows();
@@ -168,7 +206,7 @@ function renderDays() {
   $("#prev-week").disabled = state.weekOffset === 0;
   $("#next-week").disabled = addDays(start, 14) > lastWeek;
 
-  const long = s && s.length === "long";
+  const long = s && jobLength(s, addonList()) === "long";
   $("#long-note").hidden = !long;
   $("#when-lede").textContent = long
     ? "Pick a Saturday or Sunday. Grayed-out days are already booked."
@@ -185,7 +223,7 @@ function renderWindows() {
   $("#windows-label").textContent = prettyDate(state.date, { weekday: "long", month: "long", day: "numeric" });
   list.innerHTML = "";
   const taken = state.avail.taken[state.date];
-  for (const id of windowsFor(s, state.date)) {
+  for (const id of windowsFor(s, state.date, addonList())) {
     const w = WINDOWS[id];
     const open = windowOpen(id, taken);
     const b = document.createElement("button");
@@ -228,7 +266,7 @@ function renderSummary(target, withEdit) {
     ["Service", `${serviceLabel(s)} · ${priceLabel(s)}`, "service"],
     ["When", `${prettyDate(state.date, { weekday: "short", month: "short", day: "numeric" })} · ${WINDOWS[state.window].label}, ${WINDOWS[state.window].start}`, "when"],
   ];
-  if (state.addons.size) rows.push(["Extras", ADDONS.filter((a) => state.addons.has(a.id)).map((a) => a.name).join(", "), "service"]);
+  if (state.addons.size) rows.push(["Also", addonNames(ADDONS.filter((a) => state.addons.has(a.id)).map((a) => a.id)).join(", "), "service"]);
   target.innerHTML = rows.map(([k, v, step]) =>
     `<div><dt>${k}</dt><dd>${escapeHtml(v)}${withEdit ? ` <button type="button" data-go="${step}">Change</button>` : ""}</dd></div>`
   ).join("");
@@ -388,7 +426,11 @@ function updateBar() {
   if (state.step === "service") {
     next.textContent = "Continue";
     next.disabled = !s;
-    if (s) { picked.hidden = false; picked.innerHTML = `<b>${escapeHtml(serviceLabel(s))}</b>${priceLabel(s)}`; }
+    if (s) {
+      picked.hidden = false;
+      const n = state.addons.size;
+      picked.innerHTML = `<b>${escapeHtml(serviceLabel(s))}</b>${priceLabel(s)}${n ? ` + ${n} more` : ""}`;
+    }
     else if (state.group === "full") { picked.hidden = false; picked.innerHTML = `<b>Full detail</b>Pick your vehicle size`; }
   } else if (state.step === "when") {
     next.textContent = "Continue";

@@ -2,7 +2,7 @@
 // anything under /api/ lands here.
 import {
   SERVICES, ADDONS, WINDOWS, BOOK_AHEAD_DAYS,
-  serviceById, serviceLabel, windowsFor, windowOpen, windowLabel,
+  serviceById, serviceLabel, windowsFor, windowOpen, windowLabel, addonAllowed, addonNames,
   addDays, todayChicago, prettyDate,
 } from "../public/js/services.js";
 
@@ -95,14 +95,14 @@ async function createRequest(req, env, ctx) {
   const phoneDigits = String(body.phone || "").replace(/\D/g, "").replace(/^1(?=\d{10}$)/, "");
   const address = clean(body.address, 200);
   const notes = String(body.notes ?? "").trim().slice(0, 1500);
-  const addons = (Array.isArray(body.addons) ? body.addons : [])
-    .filter((a) => ADDONS.some((x) => x.id === a)).slice(0, ADDONS.length);
+  const addons = [...new Set(Array.isArray(body.addons) ? body.addons : [])]
+    .filter((a) => ADDONS.some((x) => x.id === a) && addonAllowed(service, a));
 
   if (!service) return json({ error: "Pick a service." }, 400);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return json({ error: "Pick a day." }, 400);
   const today = todayChicago();
   if (date <= today || date > addDays(today, BOOK_AHEAD_DAYS)) return json({ error: "Pick a day in the next few weeks." }, 400);
-  if (!windowsFor(service, date).includes(win)) return json({ error: "That time doesn't work for this service. Pick another." }, 400);
+  if (!windowsFor(service, date, addons).includes(win)) return json({ error: "That time doesn't work for this service. Pick another." }, 400);
   if (!vehicle) return json({ error: "What are we detailing? Add the year, make and model." }, 400);
   if (!name) return json({ error: "Add your name." }, 400);
   if (phoneDigits.length !== 10) return json({ error: "Add a 10-digit mobile number so I can text you." }, 400);
@@ -149,7 +149,7 @@ async function createRequest(req, env, ctx) {
   ];
   await env.DB.batch(stmts);
 
-  ctx.waitUntil(notifyCarlos(env, { id, service, date, win, vehicle, name, address, photos: photos.length, origin: new URL(req.url).origin }));
+  ctx.waitUntil(notifyCarlos(env, { id, service, addons, date, win, vehicle, name, address, photos: photos.length, origin: new URL(req.url).origin }));
 
   return json({ ok: true, id, first_name: name.split(" ")[0] });
 }
@@ -166,7 +166,7 @@ async function notifyCarlos(env, r) {
     const res = await fetch(`https://ntfy.sh/${encodeURIComponent(env.NTFY_TOPIC)}`, {
       method: "POST",
       headers: {
-        Title: `New request: ${serviceLabel(r.service)}`,
+        Title: `New request: ${serviceLabel(r.service)}${r.addons.length ? ` + ${addonNames(r.addons).join(", ")}` : ""}`,
         Click: `${r.origin}/admin`,
         Tags: "car",
         Priority: "high",

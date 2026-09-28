@@ -190,14 +190,14 @@ function card(r) {
   return `<article class="card ${rel === "Today" || rel === "Tomorrow" ? "soon" : ""}">
     <div class="card-top">
       <span class="card-service">${esc(serviceLabel(s) || r.service)}</span>
-      ${view === "history" ? `<span class="pill ${r.status}">${r.status}</span>` : `<span class="card-price">${esc(priceLabel(s))}</span>`}
+      ${view === "history" ? `<span class="pill ${r.status}">${r.status}</span>` : `<span class="card-price">${esc(priceLabel(s))}${r.addons && /(^|,)(wheels|correction|ceramic)(,|$)/.test(r.addons) && !(s && s.quote) ? " + quote" : ""}</span>`}
     </div>
     <p class="card-when">${rel ? `<small>${rel}</small>` : ""}${prettyDate(r.date, { weekday: "short", month: "short", day: "numeric" })} · ${esc(w ? w.label : r.time_window)}${w ? `, ${w.start}` : ""}</p>
     <dl class="facts">
       <div><dt>Customer</dt><dd>${esc(r.name)} · <a href="tel:+1${esc(r.phone)}">${phonePretty(r.phone)}</a></dd></div>
       <div><dt>Vehicle</dt><dd>${esc(r.vehicle)}</dd></div>
       <div><dt>Address</dt><dd><a href="${mapsHref(r.address)}" target="_blank" rel="noopener">${esc(r.address)}</a></dd></div>
-      ${addons ? `<div><dt>Extras</dt><dd>${esc(addons)}</dd></div>` : ""}
+      ${addons ? `<div><dt>Also</dt><dd>${esc(addons)}</dd></div>` : ""}
     </dl>
     ${r.notes ? `<div class="card-notes">${esc(r.notes)}</div>` : ""}
     ${photos}
@@ -218,8 +218,10 @@ function msgConfirm(r, date, win) {
   const first = r.name.split(" ")[0];
   const day = prettyDate(date, { weekday: "long", month: "short", day: "numeric" });
   let m = `Hi ${first}, it's Carlos with Top Tier Detailing. You're confirmed for ${day}. I'll be there at ${w.start} at ${r.address}.`;
-  if (s && (s.quote || s.from)) m += ` I'll look the car over and give you an exact price before I start.`;
-  if (s && (s.group === "ceramic" || s.group === "signature")) m += ` To hold the day I take a $__ deposit. I'll send you the details.`;
+  const extras = r.addons ? r.addons.split(",") : [];
+  const quoted = (s && (s.quote || s.from)) || extras.some((a) => ["wheels", "correction", "ceramic"].includes(a));
+  if (quoted) m += ` I'll look the car over and give you an exact price before I start.`;
+  if (s && (s.group === "ceramic" || s.group === "signature" || extras.includes("ceramic"))) m += ` To hold the day I take a $__ deposit. I'll send you the details.`;
   m += ` Reply here if anything changes. See you then!`;
   return m;
 }
