@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Requests | Top Tier Detailing</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#070707">
+  <link rel="manifest" href="/admin.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="TTD Requests">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin">
+  <!-- Sign in -->
+  <main id="login" class="login" hidden>
+    <img src="/logo.png" alt="" width="84" height="84">
+    <h1>Requests</h1>
+    <p class="lede">Sign in to see and answer booking requests.</p>
+    <form id="login-form">
+      <label class="sr-only" for="password">Password</label>
+      <input class="input" id="password" type="password" autocomplete="current-password" placeholder="Password" required>
+      <div class="form-error" id="login-error" hidden></div>
+      <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+    <p class="fine">You'll stay signed in on this phone.</p>
+  </main>
+
+  <!-- App -->
+  <div id="app" hidden>
+    <header class="a-header">
+      <div class="a-top">
+        <a class="brand" href="/"><img src="/logo.png" alt="" width="34" height="34">Requests</a>
+        <button class="linkish" id="refresh" type="button" aria-label="Refresh">↻</button>
+      </div>
+      <nav class="tabs" role="tablist">
+        <button role="tab" data-view="new" aria-selected="true">New <span class="count" id="c-new"></span></button>
+        <button role="tab" data-view="upcoming" aria-selected="false">Upcoming <span class="count" id="c-upcoming"></span></button>
+        <button role="tab" data-view="history" aria-selected="false">History</button>
+        <button role="tab" data-view="daysoff" aria-selected="false">Days off</button>
+      </nav>
+    </header>
+
+    <main class="a-main">
+      <div class="form-error" id="app-error" hidden></div>
+      <div id="list" class="cards"></div>
+      <div id="empty" class="empty" hidden></div>
+      <div id="daysoff" hidden>
+        <p class="lede small">Tap a day to take it off. Customers won't be able to book it. Dots are jobs you've already confirmed.</p>
+        <div id="cal"></div>
+      </div>
+      <p class="signout"><button class="linkish" id="logout" type="button">Sign out</button></p>
+    </main>
+  </div>
+
+  <!-- Action sheet -->
+  <dialog id="sheet" class="sheet">
+    <form method="dialog" id="sheet-form">
+      <div class="sheet-grip" aria-hidden="true"></div>
+      <h2 id="sheet-title"></h2>
+      <p class="sheet-sub" id="sheet-sub"></p>
+      <div id="sheet-body"></div>
+      <div class="form-error" id="sheet-error" hidden></div>
+      <div class="sheet-actions" id="sheet-actions"></div>
+    </form>
+  </dialog>
+
+  <script type="module" src="/js/admin.js"></script>
+</body>
+</html>

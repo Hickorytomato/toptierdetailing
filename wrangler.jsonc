@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "toptierdetailing",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "top-tier-bookings",
+      "database_id": "e76834aa-58a6-4063-a30c-fa63271a3a3b",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "observability": { "enabled": true }
+  // Secrets (set in the Cloudflare dashboard, not here):
+  //   ADMIN_PASSWORD  — Carlos's password for /admin
+  //   NTFY_TOPIC      — private topic name for phone notifications
+}

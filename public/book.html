@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Book a Detail | Top Tier Detailing</title>
+  <meta name="description" content="Book mobile car detailing in the Tulsa metro. Pick a service and a time, and Carlos will text you to confirm.">
+  <link rel="canonical" href="https://toptierdetailingok.com/book">
+  <meta name="theme-color" content="#070707">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/site.css">
+</head>
+<body class="book-page">
+  <header class="book-header">
+    <div class="wrap">
+      <a class="brand" href="/"><img src="/logo.png" alt="" width="40" height="40">Top Tier Detailing</a>
+      <a class="back" href="/">Back to site</a>
+    </div>
+  </header>
+
+  <main class="book-main" id="main">
+    <div class="progress" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <!-- Step 1: service -->
+    <section class="step" id="step-service" aria-labelledby="h-service">
+      <p class="step-label">Step 1 of 3</p>
+      <h1 id="h-service">What does your car need?</h1>
+      <p class="lede">Pick one. You can mention anything else in the notes.</p>
+      <div class="opt-list" id="service-list" role="radiogroup" aria-label="Service"></div>
+
+      <p class="group-label">Anything extra?</p>
+      <p class="group-hint">Optional. Priced on site.</p>
+      <div class="chips" id="addon-list"></div>
+    </section>
+
+    <!-- Step 2: when -->
+    <section class="step" id="step-when" aria-labelledby="h-when" hidden>
+      <p class="step-label">Step 2 of 3</p>
+      <h1 id="h-when">When works for you?</h1>
+      <p class="lede" id="when-lede">Pick a day, then a time.</p>
+
+      <div class="days-nav">
+        <button class="icon-btn" type="button" id="prev-week" aria-label="Earlier weeks">‹</button>
+        <b id="range-label"></b>
+        <button class="icon-btn" type="button" id="next-week" aria-label="Later weeks">›</button>
+      </div>
+      <div class="days" id="days" role="group" aria-label="Day"></div>
+      <p class="legend" id="days-legend"></p>
+
+      <div id="windows-wrap" hidden>
+        <p class="group-label" id="windows-label">Time</p>
+        <div class="windows" id="windows" role="radiogroup" aria-labelledby="windows-label"></div>
+      </div>
+      <p class="note" id="long-note" hidden>Correction and ceramic take all day, so I do them on weekends starting at 8 am.</p>
+    </section>
+
+    <!-- Step 3: details -->
+    <section class="step" id="step-details" aria-labelledby="h-details" hidden>
+      <p class="step-label">Step 3 of 3</p>
+      <h1 id="h-details">About you and the car</h1>
+      <p class="lede">That's all I need to confirm.</p>
+
+      <form id="details-form" novalidate>
+        <div class="field">
+          <label for="vehicle">Vehicle</label>
+          <input class="input" id="vehicle" name="vehicle" placeholder="2019 Honda Accord" autocomplete="off" required>
+        </div>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input class="input" id="name" name="name" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="phone">Mobile number</label>
+          <input class="input" id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(918) 555-0123" required>
+          <span class="hint">I'll text you here to confirm.</span>
+        </div>
+        <div class="field">
+          <label for="address">Where's the car?</label>
+          <input class="input" id="address" name="address" autocomplete="street-address" placeholder="1234 S Main St, Tulsa" required>
+        </div>
+        <div class="field">
+          <label for="notes">Notes <span class="opt-tag">(optional)</span></label>
+          <textarea class="textarea" id="notes" name="notes" placeholder="Stains, pet hair, a scratch you want me to look at, gate code…"></textarea>
+        </div>
+        <div class="field">
+          <label>Photos <span class="opt-tag">(optional)</span></label>
+          <span class="hint" id="photo-hint">Up to 4. Photos help me quote correction and coating accurately.</span>
+          <div class="photos" id="photos">
+            <label class="photo-add" aria-label="Add photos">+<input type="file" id="photo-input" accept="image/*" multiple></label>
+          </div>
+        </div>
+        <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+
+        <p class="group-label">Your request</p>
+        <dl class="summary" id="summary"></dl>
+        <div class="form-error" id="form-error" role="alert" hidden></div>
+      </form>
+    </section>
+
+    <!-- Done -->
+    <section class="step done" id="step-done" hidden aria-live="polite">
+      <div class="check" aria-hidden="true">✓</div>
+      <h1 id="done-title">Request sent</h1>
+      <p class="lede" id="done-lede"></p>
+      <dl class="summary" id="done-summary"></dl>
+      <a class="btn btn-ghost" href="/">Back to the site</a>
+    </section>
+  </main>
+
+  <div class="step-bar" id="step-bar">
+    <div class="inner">
+      <button class="btn btn-ghost" type="button" id="back-btn" hidden>Back</button>
+      <div class="picked" id="picked" hidden></div>
+      <button class="btn btn-primary" type="button" id="next-btn" disabled>Continue</button>
+    </div>
+  </div>
+
+  <script type="module" src="/js/book.js"></script>
+</body>
+</html>

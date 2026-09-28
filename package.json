@@ -1,0 +1,13 @@
+{
+  "name": "toptierdetailing",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:setup": "wrangler d1 migrations apply top-tier-bookings --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
