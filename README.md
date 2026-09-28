@@ -1,6 +1,6 @@
 # Top Tier Detailing — toptierdetailingok.com
 
-Mobile detailing site for Carlos Jackson. One Cloudflare Worker serves the pages in `public/`
+Mobile detailing site for Carlos Landeros. One Cloudflare Worker serves the pages in `public/`
 and the booking API in `src/worker.js`. Bookings live in the D1 database `top-tier-bookings`.
 
 ## Where things are
