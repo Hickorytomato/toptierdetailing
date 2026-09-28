@@ -2,7 +2,7 @@ import {
   SERVICES, ADDONS, WINDOWS, BOOK_AHEAD_DAYS,
   serviceById, serviceLabel, priceLabel, windowsFor, windowOpen,
   addonAllowed, jobLength, addonNames,
-  addDays, todayChicago, prettyDate,
+  addDays, todayChicago, prettyDate, dayType,
 } from "./services.js";
 
 const $ = (s) => document.querySelector(s);
@@ -209,7 +209,7 @@ function renderDays() {
   const long = s && jobLength(s, addonList()) === "long";
   $("#long-note").hidden = !long;
   $("#when-lede").textContent = long
-    ? "Pick a Saturday or Sunday. Grayed-out days are already booked."
+    ? "Weekends are easiest for a job this size, but any day works if I can make it happen."
     : "Weeknights start at 5 pm. Weekends have morning, afternoon, and evening times.";
   $("#days-legend").textContent = "Grayed-out days are booked or unavailable.";
 }
@@ -233,7 +233,11 @@ function renderWindows() {
     b.setAttribute("aria-checked", String(state.window === id));
     b.disabled = !open;
     if (!open) b.style.opacity = ".45";
-    const sub = id === "allday" ? "I arrive at 8 am and work through the day" : `I arrive at ${w.start}`;
+    const longJob = jobLength(s, addonList()) === "long";
+    const weekday = dayType(state.date) === "weekday";
+    let sub = `I arrive at ${w.start}`;
+    if (id === "allday") sub = weekday ? "I arrive at 8 am. Weekdays depend on my schedule, and I'll confirm." : "I arrive at 8 am and work through the day";
+    else if (longJob && id === "evening") sub = "I arrive at 5 pm. A big job may need a second evening, and I'll let you know.";
     b.innerHTML = `<span class="opt-radio"></span><span class="opt-main"><span class="opt-title">${w.label}</span><span class="opt-sub">${open ? sub : "Booked"}</span></span>`;
     b.addEventListener("click", () => { state.window = id; renderWindows(); updateBar(); });
     list.appendChild(b);

@@ -50,7 +50,7 @@ export const WINDOWS = {
   morning:   { label: "Morning",   start: "8 am",  days: ["weekend"], length: "short" },
   afternoon: { label: "Afternoon", start: "12 pm", days: ["weekend"], length: "short" },
   evening:   { label: "Evening",   start: "5 pm",  days: ["weekday", "weekend"], length: "short" },
-  allday:    { label: "All day",   start: "8 am",  days: ["weekend"], length: "long" },
+  allday:    { label: "All day",   start: "8 am",  days: ["weekday", "weekend"], length: "long" },
 };
 
 // How far ahead people can book, in days.
@@ -83,6 +83,9 @@ export function windowsFor(service, ymd, addonIds = []) {
   if (!service) return [];
   const type = dayType(ymd);
   const len = jobLength(service, addonIds);
+  // Big jobs: all day on any day. On weekdays customers can also ask for an
+  // evening start. Carlos decides when he confirms (he can move it then).
+  if (len === "long") return type === "weekday" ? ["allday", "evening"] : ["allday"];
   return Object.entries(WINDOWS)
     .filter(([, w]) => w.length === len && w.days.includes(type))
     .map(([id]) => id);
