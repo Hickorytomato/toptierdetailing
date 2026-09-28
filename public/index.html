@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -19,6 +19,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/site.css">
+  <script>document.documentElement.classList.replace("no-js","js")</script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -74,12 +75,12 @@
 
     <section id="services">
       <div class="wrap">
-        <div class="section-head">
+        <div class="section-head" data-reveal>
           <p class="eyebrow">Services</p>
           <h2>What I do</h2>
           <p class="lede">Everything happens at your place. You just need a spot where I can get all the way around the car.</p>
         </div>
-        <div class="services">
+        <div class="services" data-reveal-group>
           <article class="service">
             <img src="/images/interior-leather.jpg" alt="Clean leather seats after an interior detail" loading="lazy" width="1400" height="933">
             <div class="service-body">
@@ -118,12 +119,12 @@
 
     <section id="pricing" class="alt">
       <div class="wrap">
-        <div class="section-head">
+        <div class="section-head" data-reveal>
           <p class="eyebrow">Pricing</p>
           <h2>Straight prices</h2>
           <p class="lede">I confirm the final price before I start. If something's going to cost more, I'll tell you first.</p>
         </div>
-        <div class="prices">
+        <div class="prices" data-reveal-group>
           <div class="price-card">
             <h3>Full detail</h3>
             <p>Inside and out. Takes about 2–4 hours.</p>
@@ -165,11 +166,11 @@
 
     <section id="how">
       <div class="wrap">
-        <div class="section-head">
+        <div class="section-head" data-reveal>
           <p class="eyebrow">How it works</p>
           <h2>Booking takes about a minute</h2>
         </div>
-        <ol class="steps">
+        <ol class="steps" data-reveal-group>
           <li><h3>Pick a time</h3><p>Choose the service and a day that works for you, and tell me about the car.</p></li>
           <li><h3>I text you</h3><p>I'll confirm by text. If I need to move the time, we'll work it out there.</p></li>
           <li><h3>I show up</h3><p>I bring the gear and get to work. You don't need to be outside.</p></li>
@@ -180,11 +181,11 @@
 
     <section id="hours" class="alt">
       <div class="wrap">
-        <div class="section-head">
+        <div class="section-head" data-reveal>
           <p class="eyebrow">Hours &amp; area</p>
           <h2>Evenings and weekends</h2>
         </div>
-        <div class="split">
+        <div class="split" data-reveal-group>
           <div class="panel">
             <h3>Hours</h3>
             <table class="hours">
@@ -206,11 +207,11 @@
 
     <section id="faq">
       <div class="wrap">
-        <div class="section-head">
+        <div class="section-head" data-reveal>
           <p class="eyebrow">Good to know</p>
           <h2>Before you book</h2>
         </div>
-        <div class="faq">
+        <div class="faq" data-reveal-group>
           <details>
             <summary>Do I need to be home?</summary>
             <p>Just for a few minutes at the start and end, so you can hand me the keys and do the walk-around. In between, you can go about your day.</p>
@@ -236,7 +237,7 @@
     </section>
 
     <section class="cta-band alt">
-      <div class="wrap">
+      <div class="wrap" data-reveal>
         <h2>Ready when you <em>are.</em></h2>
         <p class="lede">Pick a day, and I'll text you to confirm.</p>
         <div class="hero-cta"><a class="btn btn-brass" href="/book">Book a detail</a></div>

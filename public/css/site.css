@@ -310,3 +310,42 @@ h1 em, h2 em { font-style: italic; color: var(--brass); font-weight: 600; }
 
 .sub-label { font-size: .85rem; font-weight: 600; color: var(--fg); margin: 16px 0 8px; }
 .sub-label span { color: var(--dim); font-weight: 400; }
+
+/* ───────── Motion (kept subtle; off for people who ask for reduced motion) ───────── */
+@media (prefers-reduced-motion: no-preference) {
+  /* Hero: slow push-in on the photo, content rises in */
+  .hero-img { animation: heroZoom 14s var(--ease) both; transform-origin: 40% 60%; }
+  @keyframes heroZoom { from { transform: scale(1.12); } to { transform: scale(1); } }
+  .js .hero .wrap > * { opacity: 0; animation: riseIn .9s var(--ease) forwards; }
+  .js .hero .wrap > :nth-child(1) { animation-delay: .15s; }
+  .js .hero .wrap > :nth-child(2) { animation-delay: .3s; }
+  .js .hero .wrap > :nth-child(3) { animation-delay: .5s; }
+  .js .hero .wrap > :nth-child(4) { animation-delay: .7s; }
+  .js .hero .wrap > :nth-child(5) { animation-delay: .9s; }
+  @keyframes riseIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+  /* Gold word draws in */
+  .hero h1 em { background: linear-gradient(90deg, var(--brass), var(--brass-2) 50%, var(--brass)); -webkit-background-clip: text; background-clip: text; color: transparent; background-size: 200% 100%; animation: goldSheen 5s ease-in-out 1.2s infinite; }
+  @keyframes goldSheen { 0%, 100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+
+  /* Sections fade up as they scroll into view */
+  .js [data-reveal], .js [data-reveal-group] > * { opacity: 0; transform: translateY(24px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+  .js [data-reveal].in, .js [data-reveal-group] > .in { opacity: 1; transform: none; }
+
+  /* Cards lift a little on hover (mouse only) */
+  @media (hover: hover) {
+    .service, .price-card, .steps li { transition: transform .35s var(--ease), border-color .35s, box-shadow .35s, opacity .8s var(--ease); }
+    .service:hover, .price-card:hover, .steps li:hover { transform: translateY(-4px); border-color: rgba(201,168,110,.45); box-shadow: 0 18px 40px -24px rgba(201,168,110,.35); }
+    .service img { transition: transform .8s var(--ease); }
+    .service:hover img { transform: scale(1.04); }
+    .service { isolation: isolate; }
+  }
+
+  /* Gold buttons get a light sweep on hover */
+  .btn-brass { position: relative; overflow: hidden; }
+  .btn-brass::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.45) 50%, transparent 70%); transform: translateX(-120%); transition: transform .8s var(--ease); }
+  .btn-brass:hover::after { transform: translateX(120%); }
+
+  /* FAQ answers ease open */
+  .faq details[open] p { animation: riseIn .45s var(--ease); }
+}
