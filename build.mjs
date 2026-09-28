@@ -15,7 +15,10 @@ for (const dir of ["css", "js"]) for (const f of fs.readdirSync(`dist/${dir}`)) 
 for (const f of ["images/hero/reel-720.mp4", "images/hero/reel-540.mp4", "images/hero/poster.jpg"]) assets[`/${f}`] = hash(`dist/${f}`);
 
 const stamp = (text) => {
-  for (const [url, h] of Object.entries(assets)) text = text.split(`"${url}"`).join(`"${url}?v=${h}"`);
+  for (const [url, h] of Object.entries(assets)) {
+    text = text.split(`"${url}"`).join(`"${url}?v=${h}"`);
+    text = text.split(`"${url}#`).join(`"${url}?v=${h}#`);   // e.g. video start-time fragments
+  }
   return text;
 };
 for (const f of fs.readdirSync("dist").filter((f) => f.endsWith(".html"))) {
