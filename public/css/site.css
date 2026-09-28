@@ -292,3 +292,18 @@ section { padding: clamp(64px, 11vw, 120px) 0; }
   .hero::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(7,7,7,.8) 0%, rgba(7,7,7,.35) 45%, transparent 70%); pointer-events: none; }
   .hero .wrap { z-index: 2; }
 }
+
+/* Gold accents up top */
+h1 em, h2 em { font-style: italic; color: var(--brass); font-weight: 600; }
+.site-header::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--brass) 20%, var(--brass-2) 50%, var(--brass) 80%, transparent); opacity: .85; }
+.hero .eyebrow { display: inline-flex; align-items: center; gap: 12px; }
+.hero .eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--brass); }
+.hero-facts { border-top: 1px solid rgba(201, 168, 110, .35); padding-top: 18px; max-width: 34rem; }
+.hero-facts li { color: #d6d2cb; }
+.btn-brass { box-shadow: 0 6px 24px -8px rgba(201, 168, 110, .55); }
+.hero + section { border-top: 1px solid rgba(201, 168, 110, .18); }
+.brand img { box-shadow: 0 0 0 1px rgba(201, 168, 110, .55); }
+@media (min-width: 820px) {
+  .hero { align-items: center; }
+  .hero .wrap { padding-top: 48px; padding-bottom: 48px; }
+}
