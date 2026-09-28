@@ -17,7 +17,9 @@ and the booking API in `src/worker.js`. Bookings live in the D1 database `top-ti
 ## Hosting
 Lives in the Cloudflare **Pages** project `top-tier-detailing` (custom domains toptierdetailingok.com
 and www). `src/worker.js` is bundled to `_worker.js` so Pages runs the API. Production bindings:
-`DB` → D1 `top-tier-bookings`, secrets `ADMIN_PASSWORD` (Carlos's /admin password) and `NTFY_TOPIC`.
+`DB` → D1 `top-tier-bookings`, secret `ADMIN_PASSWORD` (Carlos's /admin password), and service binding `MAILER` → Worker `ttd-mailer`
+(`mailer/`), which emails new requests to Carlos (landeros14@icloud.com) via Cloudflare Email Routing.
+Deploy the mailer with `cd mailer && npx wrangler deploy`.
 
 Rollback: Cloudflare dashboard → Workers & Pages → top-tier-detailing → Deployments → pick an older one → Rollback.
 
@@ -38,5 +40,5 @@ npx wrangler dev
 ## To do
 - Photos: `public/images/work/` (Carlos's, retouched, location data stripped). Hero reel: `public/images/hero/`. Logo: `public/logo.svg` (white), `logo-gold.svg`.
 - Fill in the coating deposit amount in `public/js/admin.js` (search for `$__`).
-- New-request phone notifications: ntfy.sh blocks Cloudflare's shared IPs on the free tier,
-  so this needs another channel (email, Telegram, or an ntfy account token).
+- Email Routing must be enabled on toptierdetailingok.com and landeros14@icloud.com verified
+  as a destination address, or new-request emails fail ("could not find account config").

@@ -162,33 +162,49 @@ async function createRequest(req, env, ctx) {
   ];
   await env.DB.batch(stmts);
 
-  ctx.waitUntil(notifyCarlos(env, { id, service, addons, date, win, vehicle, name, address, photos: photos.length, origin: new URL(req.url).origin }));
+  ctx.waitUntil(notifyCarlos(env, { id, service, addons, date, win, vehicle, name, phone: phoneDigits, address, notes, photos: photos.length, origin: new URL(req.url).origin }));
 
   return json({ ok: true, id, first_name: name.split(" ")[0] });
 }
 
 async function notifyCarlos(env, r) {
-  if (!env.NTFY_TOPIC) { console.log("ntfy: no topic set"); return; }
-  const city = r.address.split(",").slice(1).join(",").trim() || r.address;
-  const lines = [
-    `${prettyDate(r.date)} · ${windowLabel(r.win)}`,
-    `${r.vehicle}${r.photos ? ` · ${r.photos} photo${r.photos > 1 ? "s" : ""}` : ""}`,
-    `${r.name.split(" ")[0]} · ${city}`,
+  if (!env.MAILER) { console.log("mailer not bound"); return; }
+  const esc = (v) => String(v ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const phone = String(r.phone);
+  const pretty = `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6)}`;
+  const when = `${prettyDate(r.date, { weekday: "long", month: "short", day: "numeric" })} · ${windowLabel(r.win)}`;
+  const service = serviceLabel(r.service) + (r.addons.length ? ` + ${addonNames(r.addons).join(", ")}` : "");
+  const link = `${r.origin}/admin`;
+  const rows = [
+    ["When", when],
+    ["Service", service],
+    ["Vehicle", r.vehicle],
+    ["Customer", r.name],
+    ["Phone", pretty],
+    ["Address", r.address],
+    ...(r.notes ? [["Notes", r.notes]] : []),
+    ...(r.photos ? [["Photos", `${r.photos} attached (see them in Requests)`]] : []),
   ];
+  const text = `New booking request\n\n${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}\n\nConfirm, suggest another time, or decline:\n${link}`;
+  const html = `<!doctype html><html><body style="margin:0;background:#0b0b0b;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#f3f1ed">
+<div style="max-width:520px;margin:0 auto;padding:24px 18px">
+  <p style="margin:0 0 4px;color:#c9a86e;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700">New booking request</p>
+  <h1 style="margin:0 0 18px;font-family:Georgia,serif;font-size:26px;font-weight:600;color:#fff">${esc(when)}</h1>
+  <table style="width:100%;border-collapse:collapse;background:#151515;border:1px solid #2a2a2a;border-radius:10px">
+    ${rows.map(([k, v]) => `<tr><td style="padding:10px 14px;color:#8f8a83;font-size:14px;vertical-align:top;width:90px;border-bottom:1px solid #222">${esc(k)}</td><td style="padding:10px 14px;font-size:15px;border-bottom:1px solid #222">${k === "Phone" ? `<a href="tel:+1${phone}" style="color:#e0c592">${esc(v)}</a>` : esc(v)}</td></tr>`).join("")}
+  </table>
+  <p style="margin:22px 0 10px"><a href="${link}" style="display:inline-block;background:#c9a86e;color:#120e07;text-decoration:none;font-weight:700;padding:14px 26px;border-radius:999px">Open requests</a></p>
+  <p style="margin:0;color:#75716b;font-size:13px">Confirm, suggest another time, or decline from your Requests screen. Request ${esc(r.id)}.</p>
+</div></body></html>`;
   try {
-    const res = await fetch(`https://ntfy.sh/${encodeURIComponent(env.NTFY_TOPIC)}`, {
+    const res = await env.MAILER.fetch("https://mailer/send", {
       method: "POST",
-      headers: {
-        Title: `New request: ${serviceLabel(r.service)}${r.addons.length ? ` + ${addonNames(r.addons).join(", ")}` : ""}`,
-        Click: `${r.origin}/admin`,
-        Tags: "car",
-        Priority: "high",
-      },
-      body: lines.join("\n"),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ subject: `New request: ${service} · ${prettyDate(r.date)}`, text, html }),
     });
-    if (!res.ok) console.error("ntfy failed", res.status, await res.text());
+    if (!res.ok) console.error("mailer failed", res.status, await res.text());
   } catch (e) {
-    console.error("ntfy failed", e);
+    console.error("mailer error", e);
   }
 }
 

@@ -1,0 +1,11 @@
+{
+  // Tiny private Worker that emails Carlos. Pages can't send email directly,
+  // so the site calls this through a service binding (it has no public URL).
+  "name": "ttd-mailer",
+  "main": "mailer.js",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": false,
+  "send_email": [
+    { "name": "EMAIL", "destination_address": "landeros14@icloud.com" }
+  ]
+}
