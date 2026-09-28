@@ -7,3 +7,11 @@
   Cache-Control: no-store
 /images/*
   Cache-Control: public, max-age=2592000
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+/images/hero/*
+  Cache-Control: public, max-age=31536000, immutable
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate

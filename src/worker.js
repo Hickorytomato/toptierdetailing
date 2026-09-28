@@ -21,7 +21,7 @@ export default {
     const url = new URL(request.url);
     const moved = REDIRECTS[url.pathname];
     if (moved) return Response.redirect(url.origin + moved, 301);
-    if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
+    if (!url.pathname.startsWith("/api/")) return serveAsset(request, env, url);
     try {
       return await route(request, env, ctx, url);
     } catch (err) {
@@ -54,6 +54,19 @@ async function route(req, env, ctx, url) {
     if (p === "/api/admin/days-off" && m === "POST") return toggleDayOff(req, env);
   }
   return json({ error: "Not found" }, 404);
+}
+
+// Static files. Versioned CSS/JS/video (?v=hash) can be cached forever; pages
+// themselves are always re-checked so a phone never mixes new HTML with old styles.
+async function serveAsset(request, env, url) {
+  const res = await env.ASSETS.fetch(request);
+  if (!res.ok) return res;
+  const out = new Response(res.body, res);
+  const type = out.headers.get("Content-Type") || "";
+  if (url.searchParams.has("v")) out.headers.set("Cache-Control", "public, max-age=31536000, immutable");
+  else if (type.includes("text/html")) out.headers.set("Cache-Control", "no-cache");
+  else if (/\.(css|js)$/.test(url.pathname)) out.headers.set("Cache-Control", "no-cache");
+  return out;
 }
 
 // ───────────── public ─────────────
